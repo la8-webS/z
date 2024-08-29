@@ -5,17 +5,18 @@ require_relative "utils/date.rb"
 
 enable :sessions
 
-puts "Loading models.rb..."
+# puts "Loading models.rb..."
 require "./models.rb"
-puts "models.rb loaded."
+# puts "models.rb loaded."
 
 def logged_in?
-  !!session[:user_id]
+  !!session[:user]
 end
 
 get '/' do
     if logged_in?
         @posts = Post.all
+        puts "aaa"
         erb :index
     else
         redirect "/signup"
@@ -44,8 +45,31 @@ post "/login" do
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
         session[:user] = user.id
-        redirect "/index"
+        redirect "/"
     else
         redirect "/login"
     end
+end
+
+# get "/index" do
+#     redirect "/index"
+# end
+
+post '/post-content' do
+    @post = Post.create(content: params[:content], user_id: session[:user])
+    redirect "/"
+end
+
+get "/posts/:id" do
+    @post = Post.find_by(id: params[:id])
+    if @post
+        @comments = @post.comments
+        erb  :comment
+    end
+end
+
+post "/post-comment" do
+    @comment = Comment.create(content: params[:content], post_id: params[:post_id], user_id: session[:user])
+    
+    redirect "/posts/#{params[:post_id]}"
 end

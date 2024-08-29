@@ -7,26 +7,26 @@
 <!-- 穴埋めをしよう -->
 <div class="post">
 	<div class="post-info">
-    <p class="post-user-name"><%=  %></p>
-    <p class="post-user-id">@<%=  %></p>
-    <p class="post-created-at"><%=  %></p>
+    <p class="post-user-name"><%= @post.user.name %></p>
+    <p class="post-user-id">@<%= @post.user.id %></p>
+    <p class="post-created-at"><%= @post.created_at %></p>
   </div>
-  <p><%=  %></p>
+  <p><%= @post.content %></p>
   <div class="post-comment-info">
     <img src="/img/comment.svg" alt="comment" width="21px" height="21px">
-    <p><%=  %></p>
+    <p><%= @post.comments.count %></p>
   </div>
 </div>
 
-<form action="" method="post" id="post-form">
-		<input type="hidden" name="post_id" value="<%=  %>">
-		<input type="hidden" name="user_name" value="<%=  %>">
+<form action="/post-comment" method="post" id="post-form">
+		<input type="hidden" name="post_id" value="<%= @post.id %>">
+		<input type="hidden" name="user_name" value="<%= @post.user.name %>">
     <textarea type="text" name="content" placeholder="返信をポスト"></textarea>
     <button type="submit">返信する</button>
 </form>
-<% #コメント %>
-  <div class="post">
-    <p class="post-user-name"><%=  %></p>
-    <p><%=  %></p>
+<% @comments.each do |comment| %>
+  <div class="post-info">
+    <p class="post-user-name"><%= comment.user.name %></p>
+    <p class="post"><%= comment.content %></p>
   </div>
 <% end %>
